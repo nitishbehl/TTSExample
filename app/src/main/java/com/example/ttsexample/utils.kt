@@ -1,4 +1,4 @@
-package com.example.ttsexample.utils
+package com.example.ttsexample
 
 import android.content.Context
 import android.content.Intent
