@@ -19,7 +19,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.ttsexample.db.AppDatabase
-
 import java.util.Locale
 
 class MainActivity : ComponentActivity() {
@@ -30,16 +29,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-
         val db = Room.databaseBuilder(
             applicationContext,
             AppDatabase::class.java,
             "speech-history.db"
         ).fallbackToDestructiveMigration().build()
 
-
         val viewModel = MainViewModel(db)
-
 
         tts = TextToSpeech(this) { status ->
             if (status != TextToSpeech.ERROR) {
@@ -57,41 +53,26 @@ class MainActivity : ComponentActivity() {
                     NavigationBar(
                         containerColor = MaterialTheme.colorScheme.primaryContainer
                     ) {
-                        NavigationBarItem(
-                            selected = selectedItem == "speech_screen",
-                            onClick = {
-                                selectedItem = "speech_screen"
-                                navController.navigate("speech_screen") {
-                                    popUpTo(navController.graph.startDestinationId) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
-                            icon = { Icon(Icons.Default.PlayArrow, contentDescription = "Speech") },
-                            label = { Text("Speech") }
+                        val items = listOf(
+                            "speech_screen" to Icons.Default.PlayArrow,
+                            "history_screen" to Icons.Default.CheckCircle
                         )
-                        NavigationBarItem(
-                            selected = selectedItem == "history_screen",
-                            onClick = {
-                                selectedItem = "history_screen"
-                                navController.navigate("history_screen") {
-                                    popUpTo(navController.graph.startDestinationId) {
-                                        saveState = true
+
+                        items.forEach { (route, icon) ->
+                            NavigationBarItem(
+                                selected = selectedItem == route,
+                                onClick = {
+                                    selectedItem = route
+                                    navController.navigate(route) {
+                                        launchSingleTop = true
+                                        popUpTo(navController.graph.startDestinationId) { saveState = true }
+                                        restoreState = true
                                     }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
-                            icon = {
-                                Icon(
-                                    Icons.Default.CheckCircle,
-                                    contentDescription = "History"
-                                )
-                            },
-                            label = { Text("History") }
-                        )
+                                },
+                                icon = { Icon(icon, contentDescription = route) },
+                                label = { Text(if (route == "speech_screen") "Speech" else "History") }
+                            )
+                        }
                     }
                 }
             ) { padding ->

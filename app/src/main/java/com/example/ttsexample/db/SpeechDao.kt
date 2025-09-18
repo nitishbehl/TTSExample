@@ -21,5 +21,4 @@ interface SpeechDao {
 
     @Query("DELETE FROM SpeechHistory")
     suspend fun clearHistory()
-
 }

@@ -47,6 +47,7 @@ dependencies {
     // Compose BOM
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.material3)
+    implementation(libs.androidx.room.external.antlr)
     androidTestImplementation(platform(libs.androidx.compose.bom))
 
     // Core AndroidX
